@@ -2,9 +2,12 @@
 {
     public class Carro
     {
-        public int CarroId { get; set; } 
-        public string nome { get; set; }
-        public string marca { get; set; }
+        public int Id { get; set; }
+        public string Modelo { get; set; }
+        public string Marca { get; set; }
+        public int Ano { get; set; }
+        public decimal Preco { get; set; }
+        public int CategoriaCarroId { get; set; }
+        public CategoriaCarro CategoriaCarro { get; set; }
     }
-
 }

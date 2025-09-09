@@ -9,23 +9,22 @@ using lojacarros.Models;
 
 namespace lojacarros.Controllers
 {
-    public class CarrosController : Controller
+    public class CategoriaCarrosController : Controller
     {
         private readonly Contexto _context;
 
-        public CarrosController(Contexto context)
+        public CategoriaCarrosController(Contexto context)
         {
             _context = context;
         }
 
-        // GET: Carros
+        // GET: CategoriaCarros
         public async Task<IActionResult> Index()
         {
-            var contexto = _context.Carros.Include(c => c.CategoriaCarro);
-            return View(await contexto.ToListAsync());
+            return View(await _context.CategoriasCarros.ToListAsync());
         }
 
-        // GET: Carros/Details/5
+        // GET: CategoriaCarros/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +32,39 @@ namespace lojacarros.Controllers
                 return NotFound();
             }
 
-            var carro = await _context.Carros
-                .Include(c => c.CategoriaCarro)
+            var categoriaCarro = await _context.CategoriasCarros
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carro == null)
+            if (categoriaCarro == null)
             {
                 return NotFound();
             }
 
-            return View(carro);
+            return View(categoriaCarro);
         }
 
-        // GET: Carros/Create
+        // GET: CategoriaCarros/Create
         public IActionResult Create()
         {
-            ViewData["CategoriaCarroId"] = new SelectList(_context.CategoriasCarros, "Id", "Id");
             return View();
         }
 
-        // POST: Carros/Create
+        // POST: CategoriaCarros/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Modelo,Marca,Ano,Preco,CategoriaCarroId")] Carro carro)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao")] CategoriaCarro categoriaCarro)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carro);
+                _context.Add(categoriaCarro);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaCarroId"] = new SelectList(_context.CategoriasCarros, "Id", "Id", carro.CategoriaCarroId);
-            return View(carro);
+            return View(categoriaCarro);
         }
 
-        // GET: Carros/Edit/5
+        // GET: CategoriaCarros/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +72,22 @@ namespace lojacarros.Controllers
                 return NotFound();
             }
 
-            var carro = await _context.Carros.FindAsync(id);
-            if (carro == null)
+            var categoriaCarro = await _context.CategoriasCarros.FindAsync(id);
+            if (categoriaCarro == null)
             {
                 return NotFound();
             }
-            ViewData["CategoriaCarroId"] = new SelectList(_context.CategoriasCarros, "Id", "Id", carro.CategoriaCarroId);
-            return View(carro);
+            return View(categoriaCarro);
         }
 
-        // POST: Carros/Edit/5
+        // POST: CategoriaCarros/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Modelo,Marca,Ano,Preco,CategoriaCarroId")] Carro carro)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao")] CategoriaCarro categoriaCarro)
         {
-            if (id != carro.Id)
+            if (id != categoriaCarro.Id)
             {
                 return NotFound();
             }
@@ -101,12 +96,12 @@ namespace lojacarros.Controllers
             {
                 try
                 {
-                    _context.Update(carro);
+                    _context.Update(categoriaCarro);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarroExists(carro.Id))
+                    if (!CategoriaCarroExists(categoriaCarro.Id))
                     {
                         return NotFound();
                     }
@@ -117,11 +112,10 @@ namespace lojacarros.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaCarroId"] = new SelectList(_context.CategoriasCarros, "Id", "Id", carro.CategoriaCarroId);
-            return View(carro);
+            return View(categoriaCarro);
         }
 
-        // GET: Carros/Delete/5
+        // GET: CategoriaCarros/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,35 +123,34 @@ namespace lojacarros.Controllers
                 return NotFound();
             }
 
-            var carro = await _context.Carros
-                .Include(c => c.CategoriaCarro)
+            var categoriaCarro = await _context.CategoriasCarros
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carro == null)
+            if (categoriaCarro == null)
             {
                 return NotFound();
             }
 
-            return View(carro);
+            return View(categoriaCarro);
         }
 
-        // POST: Carros/Delete/5
+        // POST: CategoriaCarros/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var carro = await _context.Carros.FindAsync(id);
-            if (carro != null)
+            var categoriaCarro = await _context.CategoriasCarros.FindAsync(id);
+            if (categoriaCarro != null)
             {
-                _context.Carros.Remove(carro);
+                _context.CategoriasCarros.Remove(categoriaCarro);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarroExists(int id)
+        private bool CategoriaCarroExists(int id)
         {
-            return _context.Carros.Any(e => e.Id == id);
+            return _context.CategoriasCarros.Any(e => e.Id == id);
         }
     }
 }
